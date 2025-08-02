@@ -1,5 +1,8 @@
 defmodule Graph.Edge do
-  defstruct source: nil, destination: nil
+  defstruct type: "",
+            properties: %{},
+            source: nil,
+            destination: nil
 
   def new(source, destination) do
     %Graph.Edge{source: source, destination: destination}

@@ -1,8 +1,29 @@
 defmodule Graph.Node do
-  defstruct incoming: [], outgoing: []
+  # Problem: incoming and outgoing are maps from type to edge set, but looking up the type of an edge requires a round-trip ... unless we already make that round-trip.
+  defstruct labels: MapSet.new(), properties: %{}, incoming: %{}, outgoing: %{}
 
-  def new(incoming, outgoing) do
-    %Graph.Node{incoming: incoming, outgoing: outgoing}
+  def new(incoming, outgoing, labels \\ nil, properties \\ nil) do
+    node = %Graph.Node{
+      properties: properties,
+      incoming: incoming,
+      outgoing: outgoing
+    }
+
+    node =
+      if labels == nil do
+        node
+      else
+        %Graph.Node{node | labels: labels}
+      end
+
+    node =
+      if properties == nil do
+        node
+      else
+        %Graph.Node{node | properties: properties}
+      end
+
+    node
   end
 
   def add_incoming(node, edge) do
