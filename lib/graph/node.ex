@@ -26,6 +26,14 @@ defmodule Graph.Node do
     node
   end
 
+  def add_label(node, label) do
+    %Graph.Node{node | labels: MapSet.put(node.labels, label)}
+  end
+
+  def remove_label(node, label) do
+    %Graph.Node{node | labels: MapSet.delete(node.labels, label)}
+  end
+
   def add_incoming(node, type, edge) do
     set =
       Map.get(node.incoming, type, MapSet.new())

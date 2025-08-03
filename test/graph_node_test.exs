@@ -16,6 +16,31 @@ defmodule Graph.Node.Test do
     assert n.outgoing == 2
   end
 
+  test "adding labels" do
+    n =
+      Graph.Node.new()
+      |> Graph.Node.add_label("label1")
+      |> Graph.Node.add_label("label2")
+
+    assert MapSet.member?(n.labels, "label1")
+    assert MapSet.member?(n.labels, "label2")
+    assert MapSet.size(n.labels) == 2
+  end
+
+  test "removing labels" do
+    n =
+      Graph.Node.new()
+      |> Graph.Node.add_label("label1")
+      |> Graph.Node.add_label("label2")
+
+    n = Graph.Node.remove_label(n, "label1")
+    assert MapSet.member?(n.labels, "label2")
+    assert MapSet.size(n.labels) == 1
+
+    n = Graph.Node.remove_label(n, "label2")
+    assert MapSet.size(n.labels) == 0
+  end
+
   test "adding incoming" do
     n =
       Graph.Node.new()
