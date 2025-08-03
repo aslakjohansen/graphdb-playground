@@ -16,7 +16,7 @@ defmodule Graph.Node.Test do
     assert n.outgoing == 2
   end
 
-  test "incoming adding" do
+  test "adding incoming" do
     n =
       Graph.Node.new()
       |> Graph.Node.add_incoming("type1", 1)
@@ -32,7 +32,7 @@ defmodule Graph.Node.Test do
     assert MapSet.size(type2) == 1
   end
 
-  test "outgoing adding" do
+  test "adding outgoing" do
     n =
       Graph.Node.new()
       |> Graph.Node.add_outgoing("type1", 1)
@@ -46,5 +46,39 @@ defmodule Graph.Node.Test do
     assert MapSet.member?(type2, 3)
     assert MapSet.size(type1) == 2
     assert MapSet.size(type2) == 1
+  end
+
+  test "removing incoming" do
+    n =
+      Graph.Node.new()
+      |> Graph.Node.add_incoming("type1", 1)
+      |> Graph.Node.add_incoming("type1", 2)
+      |> Graph.Node.add_incoming("type2", 3)
+      |> Graph.Node.remove_incoming("type1", 2)
+      |> Graph.Node.remove_incoming("type2", 3)
+
+    type1 = Map.get(n.incoming, "type1")
+    type2 = Map.get(n.incoming, "type2")
+    assert MapSet.member?(type1, 1)
+    assert not MapSet.member?(type1, 2)
+    assert MapSet.size(type1) == 1
+    assert type2 == nil
+  end
+
+  test "removing outgoing" do
+    n =
+      Graph.Node.new()
+      |> Graph.Node.add_outgoing("type1", 1)
+      |> Graph.Node.add_outgoing("type1", 2)
+      |> Graph.Node.add_outgoing("type2", 3)
+      |> Graph.Node.remove_outgoing("type1", 2)
+      |> Graph.Node.remove_outgoing("type2", 3)
+
+    type1 = Map.get(n.outgoing, "type1")
+    type2 = Map.get(n.outgoing, "type2")
+    assert MapSet.member?(type1, 1)
+    assert not MapSet.member?(type1, 2)
+    assert MapSet.size(type1) == 1
+    assert type2 == nil
   end
 end
