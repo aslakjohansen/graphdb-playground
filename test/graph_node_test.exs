@@ -41,6 +41,38 @@ defmodule Graph.Node.Test do
     assert MapSet.size(n.labels) == 0
   end
 
+  test "adding properties" do
+    n =
+      Graph.Node.new()
+      |> Graph.Node.add_property("prop1", "value1")
+      |> Graph.Node.add_property("prop2", "value2")
+
+    assert Map.get(n.properties, "prop1") == "value1"
+    assert Map.get(n.properties, "prop2") == "value2"
+    assert length(Map.keys(n.properties)) == 2
+
+    n = Graph.Node.add_property(n, "prop2", "value3")
+
+    assert Map.get(n.properties, "prop1") == "value1"
+    assert Map.get(n.properties, "prop2") == "value3"
+    assert length(Map.keys(n.properties)) == 2
+  end
+
+  test "removing properties" do
+    n =
+      Graph.Node.new()
+      |> Graph.Node.add_property("prop1", "value1")
+      |> Graph.Node.add_property("prop2", "value2")
+      |> Graph.Node.remove_property("prop1")
+
+    assert Map.get(n.properties, "prop2") == "value2"
+    assert length(Map.keys(n.properties)) == 1
+
+    n = Graph.Node.remove_property(n, "prop2")
+
+    assert length(Map.keys(n.properties)) == 0
+  end
+
   test "adding incoming" do
     n =
       Graph.Node.new()
