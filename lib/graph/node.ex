@@ -5,7 +5,6 @@ defmodule Graph.Node do
 
   def new(incoming, outgoing, labels \\ nil, properties \\ nil) do
     node = %Graph.Node{
-      properties: properties,
       incoming: incoming,
       outgoing: outgoing
     }
