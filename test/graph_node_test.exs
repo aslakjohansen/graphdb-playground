@@ -3,10 +3,48 @@ defmodule Graph.Node.Test do
   doctest Graph.Node
 
   test "new with defaults" do
+    n = Graph.Node.new()
+    assert n.incoming == %{}
+    assert n.outgoing == %{}
+    assert MapSet.size(n.labels) == 0
+    assert length(Map.keys(n.properties)) == 0
+  end
+
+  test "new with incoming and outgoing" do
     n = Graph.Node.new(1, 2)
     assert n.incoming == 1
     assert n.outgoing == 2
-    assert MapSet.size(n.labels)==0
-    assert length(Map.keys(n.properties))==0
+  end
+
+  test "incoming adding" do
+    n =
+      Graph.Node.new()
+      |> Graph.Node.add_incoming("type1", 1)
+      |> Graph.Node.add_incoming("type1", 2)
+      |> Graph.Node.add_incoming("type2", 3)
+
+    type1 = Map.get(n.incoming, "type1")
+    type2 = Map.get(n.incoming, "type2")
+    assert MapSet.member?(type1, 1)
+    assert MapSet.member?(type1, 2)
+    assert MapSet.member?(type2, 3)
+    assert MapSet.size(type1) == 2
+    assert MapSet.size(type2) == 1
+  end
+
+  test "outgoing adding" do
+    n =
+      Graph.Node.new()
+      |> Graph.Node.add_outgoing("type1", 1)
+      |> Graph.Node.add_outgoing("type1", 2)
+      |> Graph.Node.add_outgoing("type2", 3)
+
+    type1 = Map.get(n.outgoing, "type1")
+    type2 = Map.get(n.outgoing, "type2")
+    assert MapSet.member?(type1, 1)
+    assert MapSet.member?(type1, 2)
+    assert MapSet.member?(type2, 3)
+    assert MapSet.size(type1) == 2
+    assert MapSet.size(type2) == 1
   end
 end

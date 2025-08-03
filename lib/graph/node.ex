@@ -3,7 +3,7 @@ defmodule Graph.Node do
 
   defstruct labels: MapSet.new(), properties: %{}, incoming: %{}, outgoing: %{}
 
-  def new(incoming, outgoing, labels \\ nil, properties \\ nil) do
+  def new(incoming \\ %{}, outgoing \\ %{}, labels \\ nil, properties \\ nil) do
     node = %Graph.Node{
       incoming: incoming,
       outgoing: outgoing
@@ -31,7 +31,7 @@ defmodule Graph.Node do
       Map.get(node.incoming, type, MapSet.new())
       |> MapSet.put(edge)
 
-    Map.put(node, :incoming, set)
+    %Graph.Node{node | incoming: Map.put(node.incoming, type, set)}
   end
 
   def add_outgoing(node, type, edge) do
@@ -39,7 +39,7 @@ defmodule Graph.Node do
       Map.get(node.outgoing, type, MapSet.new())
       |> MapSet.put(edge)
 
-    Map.put(node, :outgoing, set)
+    %Graph.Node{node | outgoing: Map.put(node.outgoing, type, set)}
   end
 
   def remove_incoming(node, type, edge) do
