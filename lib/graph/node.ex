@@ -1,5 +1,6 @@
 defmodule Graph.Node do
   # Problem: incoming and outgoing are maps from type to edge set, but looking up the type of an edge requires a round-trip ... unless we already make that round-trip.
+
   defstruct labels: MapSet.new(), properties: %{}, incoming: %{}, outgoing: %{}
 
   def new(incoming, outgoing, labels \\ nil, properties \\ nil) do
@@ -26,19 +27,43 @@ defmodule Graph.Node do
     node
   end
 
-  def add_incoming(node, edge) do
-    %Graph.Node{node | incoming: [edge | node.incoming]}
+  def add_incoming(node, type, edge) do
+    set =
+      Map.get(node.incoming, type, MapSet.new())
+      |> MapSet.put(edge)
+
+    Map.put(node, :incoming, set)
   end
 
-  def add_outgoing(node, edge) do
-    %Graph.Node{node | outgoing: [edge | node.outgoing]}
+  def add_outgoing(node, type, edge) do
+    set =
+      Map.get(node.outgoing, type, MapSet.new())
+      |> MapSet.put(edge)
+
+    Map.put(node, :outgoing, set)
   end
 
-  def remove_incoming(node, edge) do
-    %Graph.Node{node | incoming: List.delete(node.incoming, edge)}
+  def remove_incoming(node, type, edge) do
+    set =
+      Map.get(node.incoming, type, MapSet.new())
+      |> MapSet.delete(edge)
+
+    if MapSet.size(set) == 0 do
+      Map.put(node, :incoming, Map.delete(node.incoming, type))
+    else
+      %Graph.Node{node | incoming: Map.put(node.incoming, type, set)}
+    end
   end
 
-  def remove_outgoing(node, edge) do
-    %Graph.Node{node | outgoing: List.delete(node.outgoing, edge)}
+  def remove_outgoing(node, type, edge) do
+    set =
+      Map.get(node.outgoing, type, MapSet.new())
+      |> MapSet.delete(edge)
+
+    if MapSet.size(set) == 0 do
+      Map.put(node, :outgoing, Map.delete(node.outgoing, type))
+    else
+      %Graph.Node{node | outgoing: Map.put(node.outgoing, type, set)}
+    end
   end
 end
