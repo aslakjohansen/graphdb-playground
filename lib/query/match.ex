@@ -1,8 +1,3 @@
 defmodule Query.Match do
-  # ?
-  defstruct field: nil
-
-  @type t() :: %Query.Match{
-          # ?
-        }
+  @type t() :: Query.MatchNode.t() | Query.MatchBidi.t()
 end
