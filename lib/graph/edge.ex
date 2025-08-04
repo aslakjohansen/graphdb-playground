@@ -20,4 +20,12 @@ defmodule Graph.Edge do
   def set_destination(edge, destination) do
     %Graph.Edge{edge | destination: destination}
   end
+
+  def add_property(edge, key, value) do
+    %Graph.Edge{edge | properties: Map.put(edge.properties, key, value)}
+  end
+
+  def remove_property(edge, key) do
+    %Graph.Edge{edge | properties: Map.delete(edge.properties, key)}
+  end
 end
