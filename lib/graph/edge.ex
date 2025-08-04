@@ -4,7 +4,7 @@ defmodule Graph.Edge do
             source: nil,
             destination: nil
 
-  def new(source, destination, type, properties) do
+  def new(source, destination, type, properties \\ %{}) do
     %Graph.Edge{
       type: type,
       properties: properties,
