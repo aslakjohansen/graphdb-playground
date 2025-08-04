@@ -16,6 +16,16 @@ defmodule Graph.Node.Test do
     assert n.outgoing == 2
   end
 
+  test "new with labels" do
+    n = Graph.Node.new(1, 2, 3)
+    assert n.labels == 3
+  end
+
+  test "new with properties" do
+    n = Graph.Node.new(1, 2, 3, 4)
+    assert n.properties == 4
+  end
+
   test "adding labels" do
     n =
       Graph.Node.new()
