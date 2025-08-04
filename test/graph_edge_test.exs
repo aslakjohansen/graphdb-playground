@@ -10,6 +10,11 @@ defmodule Graph.Edge.Test do
     assert e.properties == 4
   end
 
+  test "new with default properties" do
+    e = Graph.Edge.new(1, 2, 3)
+    assert e.properties == %{}
+  end
+
   test "adding properties" do
     e =
       Graph.Edge.new(1, 2, 3)
