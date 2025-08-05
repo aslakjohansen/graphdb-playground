@@ -37,6 +37,26 @@ defmodule Query.Parser.JSON do
     {:or, parse_expr(lhs), parse_expr(rhs)}
   end
 
+  defp parse_expr(%{"op" => "eq", "lhs" => lhs, "rhs" => rhs}) do
+    {:eq, parse_expr(lhs), parse_expr(rhs)}
+  end
+
+  defp parse_expr(%{"op" => "qeq", "lhs" => lhs, "rhs" => rhs}) do
+    {:geq, parse_expr(lhs), parse_expr(rhs)}
+  end
+
+  defp parse_expr(%{"op" => "leq", "lhs" => lhs, "rhs" => rhs}) do
+    {:leq, parse_expr(lhs), parse_expr(rhs)}
+  end
+
+  defp parse_expr(%{"op" => "gt", "lhs" => lhs, "rhs" => rhs}) do
+    {:gt, parse_expr(lhs), parse_expr(rhs)}
+  end
+
+  defp parse_expr(%{"op" => "lt", "lhs" => lhs, "rhs" => rhs}) do
+    {:lt, parse_expr(lhs), parse_expr(rhs)}
+  end
+
   defp parse_return([]) do
     []
   end
