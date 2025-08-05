@@ -28,4 +28,12 @@ defmodule Query.Parser.JSON do
       {:error, errors}
     end
   end
+
+  defp parse_return([]) do
+    []
+  end
+
+  defp parse_return([%{"full" => full, "as" => as} | tail]) do
+    [Query.Alias.new(full, as) | parse_return(tail)]
+  end
 end
