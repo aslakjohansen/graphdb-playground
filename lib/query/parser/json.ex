@@ -14,7 +14,7 @@ defmodule Query.Parser.JSON do
 
   defp parse_match_query({:ok, %{"match" => match, "where" => where, "return" => return}}) do
     {_, match_part} = match_response = parse_match(match)
-    {_, where_part} = where_response = parse_where(where)
+    {_, where_part} = where_response = parse_expr(where)
     {_, return_part} = return_response = parse_return(return)
 
     errors =
@@ -27,6 +27,14 @@ defmodule Query.Parser.JSON do
     else
       {:error, errors}
     end
+  end
+
+  defp parse_expr(%{"op" => "and", "lhs" => lhs, "rhs" => rhs}) do
+    {:and, parse_expr(lhs), parse_expr(rhs)}
+  end
+
+  defp parse_expr(%{"op" => "or", "lhs" => lhs, "rhs" => rhs}) do
+    {:or, parse_expr(lhs), parse_expr(rhs)}
   end
 
   defp parse_return([]) do
