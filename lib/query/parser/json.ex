@@ -19,7 +19,7 @@ defmodule Query.Parser.JSON do
 
     errors =
       [match_response, where_response, return_response]
-      |> Enum.filter(fn {status, result} -> status == :error end)
+      |> Enum.filter(fn {status, _} -> status == :error end)
       |> Enum.map(fn {_, message} -> message end)
 
     if length(errors) == 0 do
@@ -27,6 +27,10 @@ defmodule Query.Parser.JSON do
     else
       {:error, errors}
     end
+  end
+
+  defp parse_expr(value) when is_binary(value) do
+    {:string, value}
   end
 
   defp parse_expr(%{"op" => "and", "lhs" => lhs, "rhs" => rhs}) do
