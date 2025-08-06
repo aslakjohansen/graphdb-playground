@@ -21,3 +21,5 @@ The `MATCH` part of a query can be modeled in a number of ways.
 ```
 [node, {:bidi, edge}, node, {:forward, edge}, node, {:backward, edge}, node ]
 ```
+
+I think that I like this one the most. But I want to incorporate the edge type (bidi, forward, backward) in the edge struct as well.
