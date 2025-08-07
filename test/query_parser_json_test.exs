@@ -45,7 +45,7 @@ defmodule Query.Parser.JSON.Test do
     }
     """
 
-    q = Query.Parser.JSON.parse(case)
+    {:ok, q} = Query.Parser.JSON.parse(case)
     IO.inspect(q)
   end
 end
