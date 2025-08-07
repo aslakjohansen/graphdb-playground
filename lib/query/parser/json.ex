@@ -65,41 +65,49 @@ defmodule Query.Parser.JSON do
     end
   end
 
-  defp parse_expr(value) when is_binary(value) do
+  defp parse_expr(whatever) do
+    try do
+      {:ok, parse_expr!(whatever)}
+    rescue
+      _ -> {:error, "Unable to parse expression"}
+    end
+  end
+
+  defp parse_expr!(value) when is_binary(value) do
     {:string, value}
   end
 
-  defp parse_expr(%{"type" => "property", "var" => var, "field" => field})
+  defp parse_expr!(%{"type" => "property", "var" => var, "field" => field})
        when is_binary(var) and is_binary(field) do
     {:property, var, field}
   end
 
-  defp parse_expr(%{"op" => "and", "lhs" => lhs, "rhs" => rhs}) do
-    {:and, parse_expr(lhs), parse_expr(rhs)}
+  defp parse_expr!(%{"op" => "and", "lhs" => lhs, "rhs" => rhs}) do
+    {:and, parse_expr!(lhs), parse_expr!(rhs)}
   end
 
-  defp parse_expr(%{"op" => "or", "lhs" => lhs, "rhs" => rhs}) do
-    {:or, parse_expr(lhs), parse_expr(rhs)}
+  defp parse_expr!(%{"op" => "or", "lhs" => lhs, "rhs" => rhs}) do
+    {:or, parse_expr!(lhs), parse_expr!(rhs)}
   end
 
-  defp parse_expr(%{"op" => "eq", "lhs" => lhs, "rhs" => rhs}) do
-    {:eq, parse_expr(lhs), parse_expr(rhs)}
+  defp parse_expr!(%{"op" => "eq", "lhs" => lhs, "rhs" => rhs}) do
+    {:eq, parse_expr!(lhs), parse_expr!(rhs)}
   end
 
-  defp parse_expr(%{"op" => "qeq", "lhs" => lhs, "rhs" => rhs}) do
-    {:geq, parse_expr(lhs), parse_expr(rhs)}
+  defp parse_expr!(%{"op" => "qeq", "lhs" => lhs, "rhs" => rhs}) do
+    {:geq, parse_expr!(lhs), parse_expr!(rhs)}
   end
 
-  defp parse_expr(%{"op" => "leq", "lhs" => lhs, "rhs" => rhs}) do
-    {:leq, parse_expr(lhs), parse_expr(rhs)}
+  defp parse_expr!(%{"op" => "leq", "lhs" => lhs, "rhs" => rhs}) do
+    {:leq, parse_expr!(lhs), parse_expr!(rhs)}
   end
 
-  defp parse_expr(%{"op" => "gt", "lhs" => lhs, "rhs" => rhs}) do
-    {:gt, parse_expr(lhs), parse_expr(rhs)}
+  defp parse_expr!(%{"op" => "gt", "lhs" => lhs, "rhs" => rhs}) do
+    {:gt, parse_expr!(lhs), parse_expr!(rhs)}
   end
 
-  defp parse_expr(%{"op" => "lt", "lhs" => lhs, "rhs" => rhs}) do
-    {:lt, parse_expr(lhs), parse_expr(rhs)}
+  defp parse_expr!(%{"op" => "lt", "lhs" => lhs, "rhs" => rhs}) do
+    {:lt, parse_expr!(lhs), parse_expr!(rhs)}
   end
 
   defp parse_return([]) do
