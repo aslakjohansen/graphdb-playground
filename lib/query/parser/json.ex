@@ -29,8 +29,49 @@ defmodule Query.Parser.JSON do
     end
   end
 
+  defp parse_match([]) do
+    {:ok, []}
+  end
+
+  defp parse_match([
+         %{"type" => "node", "var" => var, "label" => label, "properties" => properties} | rest
+       ]) do
+    {:ok, [Query.MatchNode.new(var, label, properties) | parse_match(rest)]}
+  end
+
+  defp parse_match([
+         %{
+           "type" => "edge",
+           "direction" => direction,
+           "var" => var,
+           "label" => label,
+           "properties" => properties
+         }
+         | rest
+       ]) do
+    {rest_status, rest_result} = parse_match(rest)
+
+    cond do
+      rest_status == :error ->
+        {rest_status, rest_result}
+
+      Enum.member?(["bidi", "forward", "backward"], direction) ->
+        direction = String.to_atom(direction)
+
+        {:ok, [Query.MatchEdge.new(direction, var, label, properties) | rest_result]}
+
+      true ->
+        {:error, "Direction not allowed"}
+    end
+  end
+
   defp parse_expr(value) when is_binary(value) do
     {:string, value}
+  end
+
+  defp parse_expr(%{"type" => "property", "var" => var, "field" => field})
+       when is_binary(var) and is_binary(field) do
+    {:property, var, field}
   end
 
   defp parse_expr(%{"op" => "and", "lhs" => lhs, "rhs" => rhs}) do
@@ -62,10 +103,18 @@ defmodule Query.Parser.JSON do
   end
 
   defp parse_return([]) do
-    []
+    {:ok, []}
   end
 
-  defp parse_return([%{"full" => full, "as" => as} | tail]) do
-    [Query.Alias.new(full, as) | parse_return(tail)]
+  defp parse_return([%{"full" => full, "as" => as} | rest]) do
+    {rest_status, rest_result} = parse_match(rest)
+
+    cond do
+      rest_status == :error ->
+        {rest_status, rest_result}
+
+      true ->
+        [Query.Alias.new(full, as) | rest_result]
+    end
   end
 end
