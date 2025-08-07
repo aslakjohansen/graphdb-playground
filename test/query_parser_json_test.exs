@@ -46,6 +46,25 @@ defmodule Query.Parser.JSON.Test do
     """
 
     {:ok, q} = Query.Parser.JSON.parse(case)
-    IO.inspect(q)
+    assert length(q.match) == 3
+    [qmatch0, qmatch1, qmatch2] = q.match
+
+    assert qmatch0 == %Query.MatchNode{
+             var: "sensor",
+             label: "Sensor",
+             properties: %{"modality" => "temperature"}
+           }
+
+    assert qmatch1 == %Query.MatchEdge{
+             direction: :forward,
+             var: "edge",
+             label: "hasLocation",
+             properties: %{}
+           }
+
+    assert qmatch2 == %Query.MatchNode{var: "location", label: "Location", properties: %{}}
+    assert q.omatch == nil
+    assert q.where == {:eq, {:property, "sensor", "modality"}, {:string, "temperature"}}
+    assert q.return == [%Query.Alias{full: "", as: ""}]
   end
 end
