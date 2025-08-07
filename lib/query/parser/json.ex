@@ -1,5 +1,5 @@
 defmodule Query.Parser.JSON do
-  @spec parse(binary()) :: Query.MatchQuery.t()
+  @spec parse(binary()) :: {:ok, Query.MatchQuery.t()} | {:error, term()}
   def parse(input) do
     input
     |> Jason.decode()
