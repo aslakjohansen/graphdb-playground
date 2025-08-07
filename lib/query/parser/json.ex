@@ -122,7 +122,7 @@ defmodule Query.Parser.JSON do
         {rest_status, rest_result}
 
       true ->
-        [Query.Alias.new(full, as) | rest_result]
+        {:ok, [Query.Alias.new(full, as) | rest_result]}
     end
   end
 end
