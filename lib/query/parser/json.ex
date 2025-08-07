@@ -36,7 +36,15 @@ defmodule Query.Parser.JSON do
   defp parse_match([
          %{"type" => "node", "var" => var, "label" => label, "properties" => properties} | rest
        ]) do
-    {:ok, [Query.MatchNode.new(var, label, properties) | parse_match(rest)]}
+    {rest_status, rest_result} = parse_match(rest)
+
+    cond do
+      rest_status == :error ->
+        {rest_status, rest_result}
+
+      true ->
+        {:ok, [Query.MatchNode.new(var, label, properties) | rest_result]}
+    end
   end
 
   defp parse_match([
