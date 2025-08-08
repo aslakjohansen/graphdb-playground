@@ -23,7 +23,7 @@ defmodule Query.MatchQuery do
       bindings: %{}
     }
 
-    matched_state =
+    matched_bindings =
       query.match
       |> Enum.reduce(initial_state, fn match_element, acc ->
         case match_element do
