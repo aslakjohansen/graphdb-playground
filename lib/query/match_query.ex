@@ -18,5 +18,24 @@ defmodule Query.MatchQuery do
   end
 
   def evaluate(query) do
+    initial_state = %{
+      last: nil,
+      bindings: %{}
+    }
+
+    matched_state =
+      query.match
+      |> Enum.reduce(initial_state, fn match_element, acc ->
+        case match_element do
+          %Query.MatchNode{var: var, label: label, properties: properties} ->
+            initial_state
+
+          %Query.MatchEdge{direction: direction, var: var, label: label, properties: properties} ->
+            initial_state
+
+          _ ->
+            initial_state
+        end
+      end)
   end
 end
