@@ -14,15 +14,27 @@ defmodule Graphdb do
     edge1_id = "edge 1"
 
     {:ok, node1_pid} =
-      Link.Node.start_link(node1_id, %{"modality" => "temperature"}, %{}, %{
-        "hasLocation" => [edge1_id]
-      })
+      Link.Node.start_link(
+        node1_id,
+        MapSet.new(["Sensor"]),
+        %{"modality" => "temperature"},
+        %{},
+        %{
+          "hasLocation" => [edge1_id]
+        }
+      )
 
     {:ok, edge1_pid} =
       Link.Edge.start_link(edge1_id, %{}, node1_id, node2_id)
 
     {:ok, node2_pid} =
-      Link.Node.start_link(node2_id, %{}, %{"hasLocation" => [edge1_id]}, %{})
+      Link.Node.start_link(
+        node2_id,
+        MapSet.new(["Location"]),
+        %{},
+        %{"hasLocation" => [edge1_id]},
+        %{}
+      )
 
     {:ok,
      %{

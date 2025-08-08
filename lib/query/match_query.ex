@@ -23,14 +23,19 @@ defmodule Query.MatchQuery do
       bindings: %{}
     }
 
-    matched_bindings =
+    _matched_bindings =
       query.match
-      |> Enum.reduce(initial_state, fn match_element, acc ->
+      |> Enum.reduce(initial_state, fn match_element, _acc ->
         case match_element do
-          %Query.MatchNode{var: var, label: label, properties: properties} ->
+          %Query.MatchNode{var: _var, label: _label, properties: _properties} ->
             initial_state
 
-          %Query.MatchEdge{direction: direction, var: var, label: label, properties: properties} ->
+          %Query.MatchEdge{
+            direction: _direction,
+            var: _var,
+            label: _label,
+            properties: _properties
+          } ->
             initial_state
 
           _ ->
