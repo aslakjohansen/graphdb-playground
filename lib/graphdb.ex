@@ -3,6 +3,12 @@ defmodule Graphdb do
     {:ok, node_registry_pid} = Registry.start_link(name: :link_node_registry, keys: :unique)
     {:ok, edge_registry_pid} = Registry.start_link(name: :link_edge_registry, keys: :unique)
 
+    {:ok, label2nodes_registry_pid} =
+      Registry.start_link(name: :link_label2nodes_registry, keys: :duplicate)
+
+    {:ok, label2edges_registry_pid} =
+      Registry.start_link(name: :link_label2edges_registry, keys: :duplicate)
+
     node1_id = "node 1"
     node2_id = "node 2"
     edge1_id = "edge 1"
@@ -22,6 +28,8 @@ defmodule Graphdb do
      %{
        node_registry: node_registry_pid,
        edge_registry: edge_registry_pid,
+       label2nodes_registry: label2nodes_registry_pid,
+       label2edges_registry: label2edges_registry_pid,
        nodes: [node1_pid, node2_pid],
        edges: [edge1_pid]
      }}

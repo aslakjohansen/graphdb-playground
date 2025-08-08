@@ -4,8 +4,10 @@ defmodule Link.Node do
 
   # interface
 
-  def start_link(name, properties, incoming, outgoing) do
-    GenServer.start_link(__MODULE__, {properties, incoming, outgoing}, name: via_tuple(name))
+  def start_link(name, labels, properties, incoming, outgoing) do
+    GenServer.start_link(__MODULE__, {labels, properties, incoming, outgoing},
+      name: via_tuple(name)
+    )
   end
 
   # helpers
@@ -17,7 +19,9 @@ defmodule Link.Node do
   # callbacks
 
   @impl true
-  def init({properties, incoming, outgoing}) do
+  def init({labels, properties, incoming, outgoing}) do
+    Enum.map(labels, fn label -> Registry.register(:link_label2nodes_registry, label, nil) end)
+
     node = GraphNode.new(properties, incoming, outgoing)
     {:ok, %{node: node}}
   end
