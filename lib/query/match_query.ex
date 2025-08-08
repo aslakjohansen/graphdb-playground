@@ -16,4 +16,7 @@ defmodule Query.MatchQuery do
   def new(match, where, return, omatch \\ nil) do
     %__MODULE__{match: match, where: where, return: return, omatch: omatch}
   end
+
+  def evaluate(query) do
+  end
 end
