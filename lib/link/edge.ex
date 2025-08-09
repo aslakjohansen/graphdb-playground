@@ -4,8 +4,10 @@ defmodule Link.Edge do
 
   # interface
 
-  def start_link(name, properties, source, destination) do
-    GenServer.start_link(__MODULE__, {properties, source, destination}, name: via_tuple(name))
+  def start_link(name, label, properties, source, destination) do
+    GenServer.start_link(__MODULE__, {label, properties, source, destination},
+      name: via_tuple(name)
+    )
   end
 
   # helpers
@@ -17,8 +19,10 @@ defmodule Link.Edge do
   # callbacks
 
   @impl true
-  def init({properties, source, destination}) do
-    edge = GraphEdge.new(properties, source, destination)
+  def init({label, properties, source, destination}) do
+    Registry.register(:link_label2edges_registry, label, nil)
+
+    edge = GraphEdge.new(source, destination, label, properties)
     {:ok, %{edge: edge}}
   end
 end

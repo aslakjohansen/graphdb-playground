@@ -25,7 +25,7 @@ defmodule Graphdb do
       )
 
     {:ok, edge1_pid} =
-      Link.Edge.start_link(edge1_id, %{}, node1_id, node2_id)
+      Link.Edge.start_link(edge1_id, "edge label", %{}, node1_id, node2_id)
 
     {:ok, node2_pid} =
       Link.Node.start_link(
