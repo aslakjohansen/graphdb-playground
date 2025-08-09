@@ -4,6 +4,7 @@ defmodule Link.Node do
 
   # interface
 
+  @spec start_link(term(), MapSet.t(), %{}, %{}, %{}) :: term()
   def start_link(name, labels, properties, incoming, outgoing) do
     GenServer.start_link(__MODULE__, {labels, properties, incoming, outgoing},
       name: via_tuple(name)
